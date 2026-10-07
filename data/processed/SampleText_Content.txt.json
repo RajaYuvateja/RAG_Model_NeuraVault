@@ -1,0 +1,8 @@
+[
+    {
+        "chunk_id": "1_0",
+        "page": 1,
+        "text": "﻿NeuraVault RAG Testing Document\n\nPage 1\n\nRetrieval-Augmented Generation (RAG) combines information retrieval with large language models.\n\nA vector database stores embeddings that represent semantic meaning.\n\nQdrant is an open-source vector database used for similarity search.\n\nPage 2\n\nDocument chunking divides large documents into smaller pieces.\n\nChunk overlap helps preserve context between chunks.\n\nSentence Transformers can generate embeddings for semantic search.\n\nPage 3\n\nNeuraVault aims to provide source-grounded responses with citations and low hallucination rates.\n\nUsers can upload PDFs, DOCX files, TXT files, and CSV files.",
+        "source": "SampleText_Content.txt"
+    }
+]

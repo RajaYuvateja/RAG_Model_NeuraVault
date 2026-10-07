@@ -1,0 +1,1 @@
+NeuraVault test file content for document upload and automated indexing.

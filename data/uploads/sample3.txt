@@ -1,0 +1,20 @@
+﻿Name: Priya Singh
+
+Education:
+Bachelor of Computer Applications
+
+Skills:
+Java
+HTML
+CSS
+JavaScript
+React
+NodeJS
+MongoDB
+
+Projects:
+E-Commerce Website
+Chat Application
+
+Experience:
+Frontend Developer Intern

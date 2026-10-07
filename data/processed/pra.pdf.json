@@ -1,0 +1,104 @@
+[
+    {
+        "chunk_id": "1_0",
+        "page": 1,
+        "text": "ASSIGNMENT\n \n-\n \n1\n \n \n \nEXPLORATORY\n \nDATA\n \nANALYSIS\n \nOF\n \nDATA\n \nSCIENCE\n \nSALARIES\n \nDATASET\n \nUSING\n \nR\n \n \n \n \nS.PRATHIKKSHA\n \n-\n \n3702410640\n \nRIYA\n \nKUMARI\n \n-\n \n3702410650\n \nBHAVISHYA\n \n-\n \n3702410667",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "2_0",
+        "page": 2,
+        "text": "1.\n \nTitle\n \nExploratory\n \nData\n \nAnalysis\n \n(EDA)\n \nof\n \nData\n \nScience\n \nSalaries\n \nDataset\n \nUsing\n \nR\n \nProgramming\n \n \n2.\n \nIntroduction\n \nExploratory\n \nData\n \nAnalysis\n \n(EDA)\n \nis\n \nthe\n \nprocess\n \nof\n \nexamining\n \na\n \ndataset\n \nto\n \nunderstand\n \nits\n \nstructure,\n \nidentify\n \npatterns,\n \ndetect\n \nanomalies,\n \nand\n \nsummarize\n \nits\n \nmain\n \ncharacteristics\n \nusing\n \nstatistical\n \nmethods\n \nand\n \nvisualizations.\n \nIn\n \nthis\n \nassignment,\n \nthe\n \nData\n \nScience\n \nSalaries\n \nDataset\n \nis\n \nanalyzed\n \nusing\n \nR\n \nProgramming\n.\n \nThe\n \ndataset\n \ncontains\n \ninformation\n \nabout\n \nemployees\n \nworking\n \nin\n \ndata\n \nscience-related\n \nroles,\n \nincluding\n \nexperience\n \nlevel,\n \nemployment\n \ntype,\n \nsalary,\n \ncompany\n \nlocation,\n \ncompany\n \nsize,\n \nremote\n \nwork\n \nratio,\n \nand\n \nwork\n \nyear.\n \nThe\n \nanalysis\n \nincludes\n \ndata\n \ncleaning,\n \nhandling\n \nmissing\n \nvalues,\n \nremoving\n \nduplicates,\n \nmetadata\n \nanalysis,\n \ncorrelation\n \nanalysis,\n \nvisualization,\n \nand\n \nbusiness\n \ninsights.\n \n \n3.",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "2_1",
+        "page": 2,
+        "text": "analysis\n \nincludes\n \ndata\n \ncleaning,\n \nhandling\n \nmissing\n \nvalues,\n \nremoving\n \nduplicates,\n \nmetadata\n \nanalysis,\n \ncorrelation\n \nanalysis,\n \nvisualization,\n \nand\n \nbusiness\n \ninsights.\n \n \n3.\n \nObjectives\n \nThe\n \nobjectives\n \nof\n \nthis\n \nproject\n \nare:\n \n●\n \nImport\n \nthe\n \ndataset\n \ninto\n \nR.\n \n●\n \nStudy\n \nthe\n \nstructure\n \nof\n \nthe\n \ndataset.\n \n●\n \nHandle\n \nmissing\n \nvalues.\n \n●\n \nRemove\n \nduplicate\n \nrecords.\n \n●\n \nRemove\n \nunnecessary\n \ncolumns.\n \n●\n \nCheck\n \ndata\n \nauthenticity.\n \n●\n \nPerform\n \nstring\n \nmanipulation.\n \n●\n \nPerform\n \ndate\n \nand\n \ntime\n \noperations.\n \n●\n \nAnalyze\n \ncategorical\n \nvariables.",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "3_0",
+        "page": 3,
+        "text": "●\n \nAnalyze\n \nnumerical\n \nvariables.\n \n●\n \nFind\n \ncorrelations\n \namong\n \nnumerical\n \nvariables.\n \n4.Dataset\n \nDescription\n \nDataset\n \nName:\n \n \nData\n \nScience\n \nSalaries\n \nDataset\n \n(ds_salaries.csv)\n \nThe\n \ndataset\n \ncontains\n \nsalary\n \ninformation\n \nof\n \ndata\n \nscience\n \nprofessionals.\n \nImportant\n \nAttributes\n \nColumn\n \nDescription\n \nwork_year\n \nYear\n \nof\n \nemployment\n \nexperience_level\n \nEmployee\n \nexperience\n \nlevel\n \nemployment_type\n \nFull-time,\n \nPart-time\n \netc.\n \njob_title\n \nEmployee\n \ndesignation\n \nsalary\n \nSalary\n \namount\n \nsalary_currency\n \nSalary\n \ncurrency\n \nsalary_in_usd\n \nSalary\n \nconverted\n \nto\n \nUSD\n \nemployee_residen\nce\n \nEmployee\n \nresidence",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "4_0",
+        "page": 4,
+        "text": "remote_ratio\n \nPercentage\n \nof\n \nremote\n \nwork\n \ncompany_location\n \nCompany\n \ncountry\n \ncompany_size\n \nCompany\n \nsize\n \n5.\n \nSoftware\n \nRequirements\n \n●\n \nR\n \nProgramming\n \n●\n \nRStudio\n \n●\n \ncorrplot\n \nPackage\n \n6.\n \nMethodology\n \nStep\n \n1\n \n–\n \nImport\n \nDataset\n \nThe\n \ndataset\n \nis\n \nimported\n \nusing\n \nthe\n \nread.csv()\n \nfunction.\n \nds_salaries\n \n<-\n \nread.csv(\"C:/Users/Prathikksha/Downloads/ds_salaries.csv\")",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "5_0",
+        "page": 5,
+        "text": "Step\n \n2\n \n–\n \nDisplay\n \nDataset\n \nThe\n \nfirst\n \nand\n \nlast\n \nfew\n \nrecords\n \nare\n \ndisplayed.\n \nhead(ds_salaries)\n \n \ntail(ds_salaries)",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "6_0",
+        "page": 6,
+        "text": "Step\n \n3\n \n–\n \nDataset\n \nInformation\n \nDataset\n \ndimensions,\n \nstructure\n \nand\n \nsummary\n \nstatistics\n \nare\n \nobtained.\n \ndim(ds_salaries)\n \n \nstr(ds_salaries)\n \n \nsummary(ds_salaries)\n \n \nStep\n \n4\n \n–\n \nMetadata\n \nMetadata\n \nincludes\n \ncolumn\n \nnames\n \nand\n \ndata\n \ntypes.\n \ncolnames(ds_salaries)\n \n \nsapply(ds_salaries,class)",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "7_0",
+        "page": 7,
+        "text": "Step\n \n5\n \n–\n \nMissing\n \nValues\n \nMissing\n \nvalues\n \nare\n \nidentified.\n \ncolSums(is.na(ds_salaries))\n \nRows\n \ncontaining\n \nmissing\n \nvalues\n \nare\n \nremoved.\n \nds_salaries\n \n<-\n \nna.omit(ds_salaries)\n \n \n \nStep\n \n6\n \n–\n \nDuplicate\n \nRecords\n \nDuplicate\n \nrecords\n \nare\n \nidentified.\n \nsum(duplicated(ds_salaries))\n \nDuplicates\n \nare\n \nremoved.\n \nds_salaries\n \n<-\n \nds_salaries[!duplicated(ds_salaries),]\n \n \nStep\n \n7\n \n–\n \nRemove\n \nUnwanted\n \nColumns\n \nThe\n \nsalary_currency\n \ncolumn\n \nis\n \nremoved\n \nbecause\n \nsalary_in_usd\n \nis\n \nalready\n \navailable.\n \nds_salaries\n \n<-\n \nsubset(ds_salaries,\n \n                      \nselect=-salary_currency)",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "8_0",
+        "page": 8,
+        "text": "Step\n \n8\n \n–\n \nData\n \nAuthenticity\n \nUnique\n \nvalues\n \nare\n \nchecked.\n \nunique(ds_salaries$experience_level)\n \n \nunique(ds_salaries$employment_type)\n \n \nunique(ds_salaries$company_size)\n \nInvalid\n \nsalary\n \nvalues\n \nare\n \nchecked.\n \nsubset(ds_salaries,\n \n       \nsalary_in_usd<=0)\n \n \nStep\n \n9\n \n–\n \nString\n \nFunctions\n \nString\n \noperations\n \nperformed\n \ninclude\n \n●\n \nUppercase\n \n●\n \nLowercase\n \n●\n \nSearch\n \n●\n \nReplace\n \ntoupper(ds_salaries$job_title)\n \n \ntolower(ds_salaries$job_title)\n \n \ngrep(\"Data\n \nScientist\",\n \nds_salaries$job_title,",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "9_0",
+        "page": 9,
+        "text": "value=TRUE)\n \n \ngsub(\"Data\",\"DS\",\n \nds_salaries$job_title)\n \n \nStep\n \n10\n \n–\n \nDate\n \nand\n \nTime\n \nDate\n \nfunctions\n \nare\n \ndemonstrated.\n \nSys.Date()\n \n \nSys.time()\n \nExtract\n \nYear\n \nformat(Sys.Date(),\"%Y\")\n \nExtract\n \nMonth\n \nformat(Sys.Date(),\"%m\")\n \nExtract\n \nDay\n \nformat(Sys.Date(),\"%d\")\n \n \nStep\n \n11\n \n–\n \nCategorical\n \nAnalysis\n \nFrequency\n \ntables\n \nare\n \ngenerated.\n \ntable(ds_salaries$experience_level)\n \n \ntable(ds_salaries$employment_type)",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "10_0",
+        "page": 10,
+        "text": "table(ds_salaries$company_size)\n \n \nStep\n \n12\n \n–\n \nNumerical\n \nAnalysis\n \nStatistical\n \nmeasures\n \nare\n \ncalculated.\n \nmean(ds_salaries$salary_in_usd)\n \n \nmedian(ds_salaries$salary_in_usd)\n \n \nsd(ds_salaries$salary_in_usd)\n \n \nmax(ds_salaries$salary_in_usd)\n \n \nmin(ds_salaries$salary_in_usd)\n \n \nStep\n \n13\n \n–\n \nCorrelation\n \nAnalysis\n \nCorrelation\n \nmatrix\n \nis\n \ngenerated.\n \nnumeric_data\n \n<-\n \nds_salaries[sapply(ds_salaries,is.numeric)]\n \n \ncor_matrix\n \n<-\n \ncor(numeric_data)\n \n \ncor_matrix",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "11_0",
+        "page": 11,
+        "text": "Visualization\n \ncorrplot(cor_matrix)\n \n \nStep\n \n14\n \n–\n \nData\n \nVisualization\n \nHistogram\n \nShows\n \nsalary\n \ndistribution.\n \nhist(ds_salaries$salary_in_usd)\n \nOutput\n \nScreenshot\n \n14\n \n \n \nBox\n \nPlot\n \nShows\n \nsalary\n \noutliers.",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "12_0",
+        "page": 12,
+        "text": "boxplot(ds_salaries$salary_in_usd)\n \n \nBar\n \nChart\n \nShows\n \nexperience\n \nlevel\n \ndistribution.\n \nbarplot(table(ds_salaries$experience_level))\n \n \nPie\n \nChart\n \nShows\n \ncompany\n \nsize\n \ndistribution.\n \npie(table(ds_salaries$company_size))\n \nOutput\n \nScreenshot",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "13_0",
+        "page": 13,
+        "text": "Scatter\n \nPlot\n \nShows\n \nrelationship\n \nbetween\n \nwork\n \nyear\n \nand\n \nsalary.\n \nplot(ds_salaries$work_year,\n \nds_salaries$salary_in_usd)\n \n \n \n7.\n \nBusiness\n \nAnalysis\n \nAverage\n \nsalary\n \nbased\n \non\n \nexperience.\n \naggregate(salary_in_usd~experience_level,\n \ndata=ds_salaries,\n \nmean)\n \nAverage\n \nsalary\n \nby\n \ncompany\n \nsize.\n \naggregate(salary_in_usd~company_size,\n \ndata=ds_salaries,\n \nmean)\n \nAverage\n \nsalary\n \nby\n \nemployment\n \ntype.\n \naggregate(salary_in_usd~employment_type,\n \ndata=ds_salaries,\n \nmean)\n \nHighest\n \npaying\n \ncountries.\n \naggregate(salary_in_usd~company_location,",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "14_0",
+        "page": 14,
+        "text": "data=ds_salaries,\n \nmean)\n \nHighest\n \npaying\n \njob\n \ntitles.\n \naggregate(salary_in_usd~job_title,\n \ndata=ds_salaries,\n \nmean)\n \n \n8.\n \nResult",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "15_0",
+        "page": 15,
+        "text": "9.\n \nConclusion\n \nThe\n \nData\n \nScience\n \nSalaries\n \ndataset\n \nwas\n \nsuccessfully\n \nanalyzed\n \nusing\n \nR\n \nProgramming.\n \nData\n \npreprocessing\n \ntechniques\n \nsuch\n \nas\n \nhandling\n \nmissing\n \nvalues,\n \nremoving\n \nduplicate\n \nrecords,\n \nchecking\n \nmetadata,\n \nand\n \nvalidating\n \ndata\n \nauthenticity\n \nimproved\n \nthe\n \nquality\n \nof\n \nthe\n \ndataset.\n \nStatistical\n \nanalysis\n \nand",
+        "source": "pra.pdf"
+    },
+    {
+        "chunk_id": "16_0",
+        "page": 16,
+        "text": "graphical\n \nvisualizations\n \nhelped\n \nidentify\n \nsalary\n \npatterns,\n \nrelationships,\n \nand\n \ntrends.\n \nThe\n \nstudy\n \nconcludes\n \nthat\n \nexperience\n \nlevel,\n \ncompany\n \nsize,\n \nemployment\n \ntype,\n \nand\n \ncompany\n \nlocation\n \nsignificantly\n \ninfluence\n \nsalaries\n \nin\n \nthe\n \ndata\n \nscience\n \nfield.\n \n \n10.\n \nReferences\n \n1.\n \nR\n \nProgramming\n \nDocumentation\n \n2.\n \nCRAN\n \nPackage\n \nDocumentation\n \n3.\n \nData\n \nScience\n \nSalaries\n \nDataset\n \n4.\n \nRStudio\n \nDocumentation",
+        "source": "pra.pdf"
+    }
+]

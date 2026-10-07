@@ -1,0 +1,23 @@
+﻿NeuraVault RAG Testing Document
+
+Page 1
+
+Retrieval-Augmented Generation (RAG) combines information retrieval with large language models.
+
+A vector database stores embeddings that represent semantic meaning.
+
+Qdrant is an open-source vector database used for similarity search.
+
+Page 2
+
+Document chunking divides large documents into smaller pieces.
+
+Chunk overlap helps preserve context between chunks.
+
+Sentence Transformers can generate embeddings for semantic search.
+
+Page 3
+
+NeuraVault aims to provide source-grounded responses with citations and low hallucination rates.
+
+Users can upload PDFs, DOCX files, TXT files, and CSV files.
