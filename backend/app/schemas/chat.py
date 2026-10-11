@@ -11,9 +11,11 @@ class ChatRequest(BaseModel):
 class SourceCitation(BaseModel):
     id: Optional[str] = None
     score: float
+    score_type: str = "cosine_similarity"
+    relevance_label: str = "Relevant"
     text: str
     source: str
-    page: Optional[int] = 1
+    page: Optional[int] = None
     chunk_id: Optional[str] = None
     payload: Optional[Dict[str, Any]] = None
 
@@ -23,3 +25,4 @@ class ChatResponse(BaseModel):
     answer: str
     sources: List[SourceCitation]
     total_sources: int
+    engine: Optional[str] = "local-synthesis"

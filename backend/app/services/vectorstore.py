@@ -20,7 +20,11 @@ _client_instance = None
 def get_client() -> QdrantClient:
     global _client_instance
     if _client_instance is None:
-        _client_instance = QdrantClient(path=str(settings.VECTORSTORE_PATH))
+        try:
+            _client_instance = QdrantClient(path=str(settings.VECTORSTORE_PATH))
+        except (RuntimeError, Exception) as e:
+            print(f"[VectorStore] Storage path locked or inaccessible ({e}). Falling back to in-memory Qdrant instance.")
+            _client_instance = QdrantClient(":memory:")
     return _client_instance
 
 

@@ -7,6 +7,7 @@ from app.config.settings import settings
 from app.services.ingestion import extract_document_text
 from app.services.chunking import create_chunks
 from app.services.indexing import index_chunks
+from app.services.vectorstore import delete_document_points
 from app.schemas.upload import UploadResponse
 
 router = APIRouter()
@@ -43,11 +44,12 @@ async def upload_document(
             continue
 
         chunks = create_chunks(page_text)
-        page_num = page.get("page", 1)
+        page_num = page.get("page")
 
         for idx, chunk in enumerate(chunks):
+            cid = f"{page_num}_{idx}" if page_num is not None else f"c_{idx}"
             all_chunks.append({
-                "chunk_id": f"{page_num}_{idx}",
+                "chunk_id": cid,
                 "page": page_num,
                 "text": chunk,
                 "source": safe_filename
@@ -56,6 +58,9 @@ async def upload_document(
     output_file = PROCESSED_DIR / f"{safe_filename}.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, indent=4, ensure_ascii=False)
+
+    # Purge existing vectors for this document to avoid duplicate or zombie points
+    delete_document_points(safe_filename)
 
     # Automatically index chunks into Qdrant vector database
     indexed_count = 0

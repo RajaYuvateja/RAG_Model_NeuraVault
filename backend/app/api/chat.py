@@ -22,7 +22,7 @@ async def chat_query(request: ChatRequest):
 
     # Generate grounded RAG answer
     try:
-        answer = generate_rag_response(request.query, raw_chunks)
+        answer, engine_name = generate_rag_response(request.query, raw_chunks, return_meta=True)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Generation error: {e}")
 
@@ -30,9 +30,11 @@ async def chat_query(request: ChatRequest):
         SourceCitation(
             id=c.get("id"),
             score=c.get("score", 0.0),
+            score_type=c.get("score_type", "cosine_similarity"),
+            relevance_label=c.get("relevance_label", "Relevant"),
             text=c.get("text", ""),
             source=c.get("source", "unknown"),
-            page=c.get("page", 1),
+            page=c.get("page"),
             chunk_id=c.get("chunk_id"),
             payload=c.get("payload")
         )
@@ -43,5 +45,6 @@ async def chat_query(request: ChatRequest):
         query=request.query,
         answer=answer,
         sources=sources,
-        total_sources=len(sources)
+        total_sources=len(sources),
+        engine=engine_name
     )

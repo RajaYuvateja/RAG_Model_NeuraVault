@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   getDocuments,
   uploadDocument,
@@ -27,6 +29,7 @@ export default function App() {
   const [inputQuery, setInputQuery] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [topK, setTopK] = useState(5);
+  const [expandedSources, setExpandedSources] = useState({});
   const chatBottomRef = useRef(null);
 
   // Upload state
@@ -82,7 +85,8 @@ export default function App() {
       const assistantMessage = {
         role: "assistant",
         content: response.answer,
-        sources: response.sources || []
+        sources: response.sources || [],
+        engine: response.engine
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
@@ -163,35 +167,39 @@ export default function App() {
   return (
     <div className="app-container">
       {/* Header */}
+      {/* Header with Brushed Titanium Finish & Mechanical Rivets */}
       <header style={{
-        background: "rgba(10, 13, 20, 0.85)",
-        backdropFilter: "blur(12px)",
-        borderBottom: "1px solid var(--border-subtle)",
+        background: "linear-gradient(180deg, #182236 0%, #101625 100%)",
+        borderTop: "1px solid rgba(255, 255, 255, 0.18)",
+        borderBottom: "2px solid rgba(0, 0, 0, 0.8)",
+        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
         position: "sticky",
         top: 0,
         zIndex: 50,
-        padding: "1rem 2rem"
+        padding: "0.85rem 2rem"
       }}>
         <div style={{
-          maxWidth: "1300px",
+          maxWidth: "1340px",
           margin: "0 auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between"
         }}>
-          {/* Logo */}
+          {/* Logo & Plaque */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
             <div style={{
-              width: "40px",
-              height: "40px",
+              width: "42px",
+              height: "42px",
               borderRadius: "10px",
-              background: "linear-gradient(135deg, #6366f1 0%, #06b6d4 100%)",
+              background: "linear-gradient(180deg, #6366f1 0%, #4338ca 60%, #312e81 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 16px rgba(99, 102, 241, 0.4)"
+              borderTop: "1px solid rgba(255, 255, 255, 0.4)",
+              borderBottom: "2px solid #1e1b4b",
+              boxShadow: "0 4px 14px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35)"
             }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.5))" }}>
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
                 <polyline points="2 12 12 17 22 12"></polyline>
@@ -199,69 +207,60 @@ export default function App() {
             </div>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                <span style={{ fontSize: "1.25rem", fontWeight: "800", letterSpacing: "-0.02em" }}>NeuraVault</span>
-                <span className="badge badge-info" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem" }}>v1.0 RAG</span>
+                <span style={{ fontSize: "1.25rem", fontWeight: "800", letterSpacing: "-0.02em", textShadow: "0 2px 4px rgba(0,0,0,0.8)" }}>NeuraVault</span>
+                <span className="badge badge-info" style={{ fontSize: "0.65rem", padding: "0.15rem 0.5rem" }}>v1.0 RAG</span>
               </div>
-              <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: 0 }}>Enterprise Knowledge Retrieval Engine</p>
+              <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", margin: 0, textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>Enterprise Knowledge Retrieval Engine</p>
             </div>
           </div>
 
-          {/* Navigation Tabs */}
-          <div style={{ display: "flex", gap: "0.5rem", background: "rgba(255, 255, 255, 0.04)", padding: "0.25rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+          {/* Mechanical Tab Rack */}
+          <div className="skeuo-tab-rack">
             <button
               id="tab-chat"
               onClick={() => setActiveTab("chat")}
-              className="btn"
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: "8px",
-                background: activeTab === "chat" ? "rgba(99, 102, 241, 0.2)" : "transparent",
-                color: activeTab === "chat" ? "#a5b4fc" : "var(--text-muted)",
-                border: activeTab === "chat" ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid transparent"
-              }}
+              className={`skeuo-tab-item ${activeTab === "chat" ? "active" : "inactive"}`}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
               RAG Intelligence
             </button>
             <button
               id="tab-vault"
               onClick={() => setActiveTab("vault")}
-              className="btn"
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: "8px",
-                background: activeTab === "vault" ? "rgba(99, 102, 241, 0.2)" : "transparent",
-                color: activeTab === "vault" ? "#a5b4fc" : "var(--text-muted)",
-                border: activeTab === "vault" ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid transparent"
-              }}
+              className={`skeuo-tab-item ${activeTab === "vault" ? "active" : "inactive"}`}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
               Document Vault ({documents.length})
             </button>
             <button
               id="tab-stats"
               onClick={() => setActiveTab("stats")}
-              className="btn"
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: "8px",
-                background: activeTab === "stats" ? "rgba(99, 102, 241, 0.2)" : "transparent",
-                color: activeTab === "stats" ? "#a5b4fc" : "var(--text-muted)",
-                border: activeTab === "stats" ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid transparent"
-              }}
+              className={`skeuo-tab-item ${activeTab === "stats" ? "active" : "inactive"}`}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
               Telemetry & Engine
             </button>
           </div>
 
-          {/* Health Status */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-            <span className={`status-dot ${health?.status === "healthy" ? "green" : "red"}`} />
-            <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
+          {/* Hardware Diode Indicator */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            background: "linear-gradient(180deg, #090d15 0%, #111724 100%)",
+            padding: "0.45rem 0.85rem",
+            borderRadius: "8px",
+            borderTop: "1px solid rgba(0, 0, 0, 0.8)",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
+            boxShadow: "inset 0 2px 4px rgba(0,0,0,0.6)"
+          }}>
+            <div className="skeuo-led-socket">
+              <span className={`status-dot ${health?.status === "healthy" ? "green" : "red"}`} />
+            </div>
+            <span style={{ fontSize: "0.8rem", color: "#cbd5e1", fontFamily: "var(--font-mono)", fontWeight: "600" }}>
               {health?.status === "healthy"
-                ? `Vector Store: ${health?.vectorstore?.points_count ?? 0} vectors`
-                : "Backend Disconnected"}
+                ? `Vector Store: ${health?.vectorstore?.points_count ?? 0} pts`
+                : "Backend Offline"}
             </span>
           </div>
         </div>
@@ -272,13 +271,46 @@ export default function App() {
         {/* ================= TAB 1: RAG CHAT ================= */}
         {activeTab === "chat" && (
           <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 160px)" }}>
+            {/* Empty Vault Notification Banner */}
+            {documents.length === 0 && (
+              <div style={{
+                padding: "0.85rem 1.25rem",
+                background: "rgba(99, 102, 241, 0.12)",
+                border: "1px solid rgba(99, 102, 241, 0.3)",
+                borderRadius: "10px",
+                marginBottom: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "1rem"
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <span style={{ fontSize: "1.25rem" }}>💡</span>
+                  <div>
+                    <strong style={{ fontSize: "0.875rem", color: "#e0e7ff" }}>No documents indexed yet</strong>
+                    <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                      Upload PDF, TXT, or MD documents in the Document Vault to populate your knowledge base for retrieval.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-primary"
+                  style={{ fontSize: "0.75rem", padding: "0.4rem 0.85rem", whiteSpace: "nowrap" }}
+                  onClick={() => setActiveTab("vault")}
+                >
+                  Go to Vault
+                </button>
+              </div>
+            )}
+
             {/* Quick Suggestions */}
             <div style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
               <span style={{ fontSize: "0.8125rem", color: "var(--text-dim)" }}>Suggested Prompts:</span>
               {[
                 "What is exploratory data analysis?",
                 "What attributes exist in the data science salaries dataset?",
-                "What was the conclusion and methodology of the project?"
+                "What was the conclusion and methodology of the project?",
+                "What software requirements and R packages were used?"
               ].map((prompt, i) => (
                 <button
                   key={i}
@@ -292,113 +324,195 @@ export default function App() {
             </div>
 
             {/* Messages Box */}
+            {/* Messages Console Viewport */}
             <div
-              className="glass-panel"
+              className="skeuo-panel"
               style={{
                 flex: 1,
-                overflowY: "auto",
-                padding: "1.5rem",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1.25rem",
-                marginBottom: "1rem"
+                marginBottom: "1rem",
+                overflow: "hidden"
               }}
             >
-              {messages.map((msg, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-                    maxWidth: msg.role === "user" ? "75%" : "85%"
-                  }}
-                >
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    marginBottom: "0.35rem",
-                    justifyContent: msg.role === "user" ? "flex-end" : "flex-start"
-                  }}>
-                    <span style={{ fontSize: "0.75rem", fontWeight: "600", color: msg.role === "user" ? "#a5b4fc" : "#67e8f9" }}>
-                      {msg.role === "user" ? "You" : "NeuraVault AI"}
-                    </span>
-                  </div>
+              {/* Console Top Bezel Strip */}
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0.45rem 1rem",
+                background: "linear-gradient(180deg, #1b2539 0%, #131a29 100%)",
+                borderBottom: "1px solid rgba(0, 0, 0, 0.7)"
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span className="skeuo-rivet"></span>
+                  <span className="skeuo-rivet"></span>
+                  <span style={{ fontSize: "0.7rem", color: "#64748b", fontFamily: "var(--font-mono)", fontWeight: "600", marginLeft: "6px" }}>
+                    NEURAVAULT // ACTIVE_STREAM_FEED
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontSize: "0.68rem", color: "#67e8f9", fontFamily: "var(--font-mono)" }}>LIVE_INDEX: 384D</span>
+                  <span className="skeuo-rivet"></span>
+                  <span className="skeuo-rivet"></span>
+                </div>
+              </div>
 
+              {/* Recessed CRT/OLED Well */}
+              <div
+                className="skeuo-well"
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  padding: "1.5rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1.25rem",
+                  margin: "0.5rem",
+                  borderRadius: "8px"
+                }}
+              >
+                {messages.map((msg, idx) => (
                   <div
+                    key={idx}
                     style={{
-                      padding: "1rem 1.25rem",
-                      borderRadius: "14px",
-                      background: msg.role === "user"
-                        ? "linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(79, 70, 229, 0.35) 100%)"
-                        : "rgba(16, 22, 34, 0.9)",
-                      border: msg.role === "user"
-                        ? "1px solid rgba(99, 102, 241, 0.4)"
-                        : "1px solid var(--border-subtle)",
-                      color: "var(--text-main)",
-                      fontSize: "0.9375rem",
-                      whiteSpace: "pre-wrap",
-                      boxShadow: msg.role === "user" ? "0 4px 15px rgba(99, 102, 241, 0.2)" : "none"
+                      display: "flex",
+                      flexDirection: "column",
+                      alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
+                      maxWidth: msg.role === "user" ? "75%" : "90%"
                     }}
                   >
-                    {msg.content}
-                  </div>
-
-                  {/* Sources Citations */}
-                  {msg.sources && msg.sources.length > 0 && (
-                    <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                      <span style={{ fontSize: "0.75rem", fontWeight: "600", color: "var(--text-dim)" }}>
-                        GROUNDED SOURCES ({msg.sources.length}):
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      marginBottom: "0.4rem",
+                      justifyContent: msg.role === "user" ? "flex-end" : "flex-start"
+                    }}>
+                      <span style={{ fontSize: "0.75rem", fontWeight: "700", color: msg.role === "user" ? "#a5b4fc" : "#67e8f9", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
+                        {msg.role === "user" ? "You (Operator)" : "NeuraVault Engine"}
                       </span>
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "0.5rem" }}>
-                        {msg.sources.map((src, sIdx) => {
-                          const pct = (src.score * 100).toFixed(1);
-                          return (
-                            <div
-                              key={sIdx}
-                              style={{
-                                background: "rgba(255, 255, 255, 0.03)",
-                                border: "1px solid rgba(255, 255, 255, 0.07)",
-                                borderRadius: "8px",
-                                padding: "0.625rem",
-                                fontSize: "0.78125rem"
-                              }}
-                            >
-                              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.35rem" }}>
-                                <span style={{ fontWeight: "600", color: "#818cf8" }}>📄 {src.source}</span>
-                                <span style={{ color: "#34d399", fontSize: "0.72rem" }}>Page {src.page} • {pct}% match</span>
-                              </div>
-                              <p style={{
-                                color: "var(--text-muted)",
-                                fontSize: "0.75rem",
-                                margin: 0,
-                                display: "-webkit-box",
-                                WebkitLineClamp: 3,
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden"
-                              }}>
-                                {src.text}
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
+                      {msg.engine && (
+                        <span className="badge badge-info" style={{ fontSize: "0.62rem", padding: "0.1rem 0.45rem" }}>
+                          ⚡ {msg.engine}
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
 
-              {chatLoading && (
-                <div style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: "0.75rem", color: "var(--text-muted)", fontSize: "0.875rem" }}>
-                  <div style={{ display: "inline-block", width: "16px", height: "16px", border: "2px solid #6366f1", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-                  Retrieving embeddings & synthesizing answer...
-                </div>
-              )}
-              <div ref={chatBottomRef} />
+                    <div className={msg.role === "user" ? "chat-bubble-user" : "chat-bubble-assistant"}>
+                      {msg.role === "assistant" ? (
+                        <div className="markdown-content">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {msg.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        <div style={{ whiteSpace: "pre-wrap" }}>{msg.content}</div>
+                      )}
+                    </div>
+
+                    {/* Grounded Source Citations */}
+                    {msg.sources && msg.sources.length > 0 && (
+                      <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                          <span style={{ fontSize: "0.75rem", fontWeight: "800", color: "#a5b4fc", letterSpacing: "0.06em", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
+                            GROUNDED CASSETTES ({msg.sources.length})
+                          </span>
+                          <span style={{ fontSize: "0.68rem", color: "var(--text-dim)", fontFamily: "var(--font-mono)" }}>
+                            Metric: Cosine Similarity
+                          </span>
+                        </div>
+                        
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: "0.75rem" }}>
+                          {msg.sources.map((src, sIdx) => {
+                            const cardKey = `${idx}_${sIdx}`;
+                            const isExpanded = !!expandedSources[cardKey];
+                            const score = typeof src.score === "number" ? src.score : 0.0;
+                            
+                            let badgeClass = "badge-score-low";
+                            let label = "Borderline";
+                            if (score >= 0.55) {
+                              badgeClass = "badge-score-high";
+                              label = "High Relevance";
+                            } else if (score >= 0.35) {
+                              badgeClass = "badge-score-moderate";
+                              label = "Moderate";
+                            }
+
+                            const pageText = (src.page !== null && src.page !== undefined) ? `Page ${src.page}` : "Raw Document";
+                            const isPdf = src.source && src.source.toLowerCase().endsWith(".pdf");
+
+                            return (
+                              <div key={sIdx} className="source-card">
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.45rem", gap: "0.5rem" }}>
+                                  <span style={{ fontWeight: "700", color: "#818cf8", fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={src.source}>
+                                    {isPdf ? "📕" : "📄"} {src.source}
+                                  </span>
+                                  <span className={`badge ${badgeClass}`} style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem", whiteSpace: "nowrap" }} title="Cosine Similarity Score">
+                                    {score.toFixed(3)} • {label}
+                                  </span>
+                                </div>
+                                
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.35rem" }}>
+                                  <span style={{ fontSize: "0.72rem", color: "#94a3b8", fontFamily: "var(--font-mono)" }}>
+                                    📍 {pageText}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setExpandedSources(prev => ({ ...prev, [cardKey]: !prev[cardKey] }));
+                                    }}
+                                    style={{
+                                      background: "transparent",
+                                      border: "none",
+                                      color: isExpanded ? "#a5b4fc" : "#67e8f9",
+                                      fontSize: "0.72rem",
+                                      cursor: "pointer",
+                                      fontWeight: "600",
+                                      padding: 0
+                                    }}
+                                  >
+                                    {isExpanded ? "Hide Passage ▲" : "Inspect Passage ▼"}
+                                  </button>
+                                </div>
+
+                                {isExpanded ? (
+                                  <div className="passage-box">
+                                    {src.text}
+                                  </div>
+                                ) : (
+                                  <p style={{
+                                    color: "var(--text-muted)",
+                                    fontSize: "0.75rem",
+                                    margin: 0,
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden"
+                                  }}>
+                                    {src.text}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {chatLoading && (
+                  <div style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: "0.75rem", color: "#67e8f9", fontSize: "0.85rem", fontFamily: "var(--font-mono)" }}>
+                    <div style={{ display: "inline-block", width: "16px", height: "16px", border: "2px solid #6366f1", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                    RETRIEVING DENSE VECTORS & RUNNING GROUNDED SYNTHESIS...
+                  </div>
+                )}
+                <div ref={chatBottomRef} />
+              </div>
             </div>
 
-            {/* Input Form */}
+            {/* Tactile Query Input Form */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -411,32 +525,24 @@ export default function App() {
                   id="query-input"
                   className="input"
                   type="text"
-                  placeholder="Ask any question about your indexed documents..."
+                  placeholder="Query knowledge base (e.g. 'What is SYNA?' or 'Summarize findings')..."
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
                   disabled={chatLoading}
-                  style={{ paddingRight: "4rem" }}
                 />
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                 <select
                   value={topK}
                   onChange={(e) => setTopK(Number(e.target.value))}
-                  style={{
-                    padding: "0.75rem 0.5rem",
-                    background: "rgba(16, 22, 34, 0.8)",
-                    border: "1px solid var(--border-subtle)",
-                    borderRadius: "8px",
-                    color: "var(--text-muted)",
-                    fontSize: "0.875rem",
-                    outline: "none"
-                  }}
+                  className="skeuo-select"
                   title="Number of top chunks to retrieve"
                 >
                   <option value={3}>Top 3</option>
                   <option value={5}>Top 5</option>
                   <option value={8}>Top 8</option>
+                  <option value={10}>Top 10</option>
                 </select>
 
                 <button
@@ -445,8 +551,8 @@ export default function App() {
                   className="btn btn-primary"
                   disabled={!inputQuery.trim() || chatLoading}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                  Search & Ask
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                  Search & Synthesize
                 </button>
               </div>
             </form>
@@ -455,26 +561,44 @@ export default function App() {
 
         {/* ================= TAB 2: DOCUMENT VAULT ================= */}
         {activeTab === "vault" && (
-          <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-            {/* Upload Area */}
-            <div className="glass-panel" style={{ padding: "2rem", textAlign: "center" }}>
-              <div style={{ maxWidth: "500px", margin: "0 auto" }}>
+          <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+            {/* Hydraulic Loading Hatch / Upload Bay */}
+            <div className="skeuo-panel" style={{ padding: "2.25rem", textAlign: "center", position: "relative" }}>
+              <div style={{ position: "absolute", top: "12px", left: "16px", display: "flex", gap: "6px" }}>
+                <span className="skeuo-rivet"></span>
+                <span className="skeuo-rivet"></span>
+              </div>
+              <div style={{ position: "absolute", top: "12px", right: "16px", display: "flex", gap: "6px" }}>
+                <span className="skeuo-rivet"></span>
+                <span className="skeuo-rivet"></span>
+              </div>
+
+              <div style={{ maxWidth: "560px", margin: "0 auto" }}>
                 <div style={{
-                  width: "56px",
-                  height: "56px",
-                  margin: "0 auto 1rem",
+                  width: "60px",
+                  height: "60px",
+                  margin: "0 auto 1.25rem",
                   borderRadius: "14px",
-                  background: "rgba(99, 102, 241, 0.15)",
+                  background: "linear-gradient(180deg, #243048 0%, #151d2c 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "1px solid rgba(99, 102, 241, 0.3)"
+                  borderTop: "1px solid rgba(255, 255, 255, 0.25)",
+                  borderBottom: "2px solid #090d15",
+                  boxShadow: "0 6px 14px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
                 }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.6))" }}>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
                 </div>
-                <h3 style={{ fontSize: "1.25rem", fontWeight: "700", marginBottom: "0.5rem" }}>Upload Documents to NeuraVault</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
-                  Upload PDF, TXT, or MD documents. Text will be extracted, split into semantic chunks, vectorized, and stored in the vector database automatically.
+                
+                <h3 style={{ fontSize: "1.35rem", fontWeight: "800", marginBottom: "0.5rem", letterSpacing: "-0.01em", textShadow: "0 2px 4px rgba(0,0,0,0.8)" }}>
+                  Pneumatic Knowledge Intake Hatch
+                </h3>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", marginBottom: "1.75rem", lineHeight: 1.6 }}>
+                  Ingest PDF, TXT, or MD documents. Text is cleaned, segmented into recursive semantic chunks, and embedded directly into the Qdrant dense vector store.
                 </p>
 
                 <input
@@ -486,33 +610,38 @@ export default function App() {
                   style={{ display: "none" }}
                 />
 
-                <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+                <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
                   <button
                     id="btn-upload-file"
                     className="btn btn-primary"
                     disabled={uploading}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    {uploading ? "Ingesting & Indexing..." : "Select File to Upload"}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    {uploading ? "Extracting & Embedding..." : "Ingest Document Cartridge"}
                   </button>
                   <button
                     id="btn-reindex"
                     className="btn btn-secondary"
                     onClick={handleReindex}
                   >
-                    Re-Index All Documents
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    Re-Index All Vectors
                   </button>
                 </div>
 
                 {uploadStatus && (
                   <div style={{
-                    marginTop: "1.25rem",
-                    padding: "0.75rem 1rem",
+                    marginTop: "1.5rem",
+                    padding: "0.85rem 1.25rem",
                     borderRadius: "8px",
                     fontSize: "0.875rem",
-                    background: uploadStatus.type === "success" ? "rgba(16, 185, 129, 0.15)" : uploadStatus.type === "error" ? "rgba(244, 63, 94, 0.15)" : "rgba(6, 182, 212, 0.15)",
+                    background: uploadStatus.type === "success" ? "linear-gradient(180deg, #0b3d2b 0%, #06261b 100%)" : uploadStatus.type === "error" ? "linear-gradient(180deg, #5b1313 0%, #3a0d0d 100%)" : "linear-gradient(180deg, #0e3b4d 0%, #082430 100%)",
                     color: uploadStatus.type === "success" ? "#6ee7b7" : uploadStatus.type === "error" ? "#fda4af" : "#67e8f9",
-                    border: "1px solid rgba(255, 255, 255, 0.1)"
+                    borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderBottom: "2px solid rgba(0, 0, 0, 0.8)",
+                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                    fontWeight: "600"
                   }}>
                     {uploadStatus.text}
                   </div>
@@ -520,35 +649,50 @@ export default function App() {
               </div>
             </div>
 
-            {/* Document List */}
-            <div className="glass-panel" style={{ padding: "1.5rem" }}>
+            {/* Document Inventory Registry */}
+            <div className="skeuo-panel" style={{ padding: "1.75rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
                 <div>
-                  <h3 style={{ fontSize: "1.125rem", fontWeight: "700" }}>Stored Documents ({documents.length})</h3>
-                  <p style={{ color: "var(--text-dim)", fontSize: "0.8125rem" }}>Total processed chunks: {totalChunks}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <h3 style={{ fontSize: "1.15rem", fontWeight: "800", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
+                      Indexed Cartridge Registry ({documents.length})
+                    </h3>
+                    <span className="badge badge-info" style={{ fontSize: "0.65rem" }}>ENCRYPTED VAULT</span>
+                  </div>
+                  <p style={{ color: "var(--text-dim)", fontSize: "0.8125rem", fontFamily: "var(--font-mono)" }}>
+                    Total dense chunks indexed: {totalChunks}
+                  </p>
                 </div>
                 <button className="btn btn-secondary" onClick={loadInitialData}>
-                  Refresh
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  Sync Registry
                 </button>
               </div>
 
               {loadingDocs ? (
-                <p style={{ color: "var(--text-muted)" }}>Loading document inventory...</p>
+                <p style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>Querying document catalog...</p>
               ) : documents.length === 0 ? (
-                <div style={{ padding: "2rem", textAlign: "center", color: "var(--text-muted)" }}>
-                  No documents in vault. Upload your first document above.
+                <div style={{ padding: "2.5rem", textAlign: "center", color: "var(--text-muted)" }}>
+                  No cartridges detected in vault. Ingest your first document above.
                 </div>
               ) : (
-                <div style={{ overflowX: "auto" }}>
+                <div className="skeuo-well" style={{ overflowX: "auto", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
                     <thead>
-                      <tr style={{ borderBottom: "1px solid var(--border-subtle)", textAlign: "left", color: "var(--text-dim)" }}>
-                        <th style={{ padding: "0.75rem 1rem" }}>Filename</th>
-                        <th style={{ padding: "0.75rem 1rem" }}>Size</th>
-                        <th style={{ padding: "0.75rem 1rem" }}>Chunks</th>
-                        <th style={{ padding: "0.75rem 1rem" }}>Status</th>
-                        <th style={{ padding: "0.75rem 1rem" }}>Uploaded At</th>
-                        <th style={{ padding: "0.75rem 1rem", textAlign: "right" }}>Actions</th>
+                      <tr style={{
+                        background: "linear-gradient(180deg, #1b2539 0%, #131a29 100%)",
+                        borderBottom: "1px solid rgba(0, 0, 0, 0.8)",
+                        textAlign: "left",
+                        color: "#94a3b8",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.75rem"
+                      }}>
+                        <th style={{ padding: "0.85rem 1rem" }}>CARTRIDGE</th>
+                        <th style={{ padding: "0.85rem 1rem" }}>SIZE</th>
+                        <th style={{ padding: "0.85rem 1rem" }}>CHUNKS</th>
+                        <th style={{ padding: "0.85rem 1rem" }}>INDEX_STATE</th>
+                        <th style={{ padding: "0.85rem 1rem" }}>TIMESTAMP</th>
+                        <th style={{ padding: "0.85rem 1rem", textAlign: "right" }}>HARDWARE CONTROLS</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -557,13 +701,13 @@ export default function App() {
                           key={idx}
                           style={{
                             borderBottom: "1px solid rgba(255, 255, 255, 0.04)",
-                            transition: "background 0.15s"
+                            background: idx % 2 === 0 ? "rgba(0, 0, 0, 0.15)" : "transparent"
                           }}
                         >
-                          <td style={{ padding: "0.875rem 1rem", fontWeight: "600" }}>
+                          <td style={{ padding: "0.875rem 1rem", fontWeight: "700", color: "#f8fafc" }}>
                             {doc.is_pdf ? "📕" : "📄"} {doc.filename}
                           </td>
-                          <td style={{ padding: "0.875rem 1rem", color: "var(--text-muted)" }}>
+                          <td style={{ padding: "0.875rem 1rem", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
                             {(doc.size_bytes / 1024).toFixed(1)} KB
                           </td>
                           <td style={{ padding: "0.875rem 1rem" }}>
@@ -576,24 +720,24 @@ export default function App() {
                               <span className="badge badge-warning">Unprocessed</span>
                             )}
                           </td>
-                          <td style={{ padding: "0.875rem 1rem", color: "var(--text-muted)", fontSize: "0.8125rem" }}>
+                          <td style={{ padding: "0.875rem 1rem", color: "var(--text-muted)", fontSize: "0.8rem", fontFamily: "var(--font-mono)" }}>
                             {doc.modified_time}
                           </td>
                           <td style={{ padding: "0.875rem 1rem", textAlign: "right" }}>
                             <div style={{ display: "inline-flex", gap: "0.5rem" }}>
                               <button
                                 className="btn btn-secondary"
-                                style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
+                                style={{ padding: "0.35rem 0.75rem", fontSize: "0.75rem" }}
                                 onClick={() => handleViewChunks(doc.filename)}
                               >
                                 View Chunks
                               </button>
                               <button
                                 className="btn btn-danger"
-                                style={{ padding: "0.35rem 0.65rem", fontSize: "0.75rem" }}
+                                style={{ padding: "0.35rem 0.75rem", fontSize: "0.75rem" }}
                                 onClick={() => handleDeleteDoc(doc.filename)}
                               >
-                                Delete
+                                Purge
                               </button>
                             </div>
                           </td>
@@ -609,57 +753,87 @@ export default function App() {
 
         {/* ================= TAB 3: TELEMETRY & STATS ================= */}
         {activeTab === "stats" && (
-          <div className="animate-fade-in" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            {/* Vector Store Card */}
-            <div className="glass-panel" style={{ padding: "1.5rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "rgba(99, 102, 241, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+          <div className="animate-fade-in" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "1.75rem" }}>
+            {/* Vector Store Gauge Card */}
+            <div className="skeuo-panel" style={{ padding: "1.75rem", position: "relative" }}>
+              <div style={{ position: "absolute", top: "12px", right: "14px", display: "flex", gap: "5px" }}>
+                <span className="skeuo-rivet"></span>
+                <span className="skeuo-rivet"></span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
+                <div style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(180deg, #2b3366 0%, #161b36 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTop: "1px solid rgba(255, 255, 255, 0.25)",
+                  boxShadow: "0 3px 6px rgba(0,0,0,0.5)"
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
                 </div>
                 <div>
-                  <h4 style={{ fontSize: "1.125rem", fontWeight: "700" }}>Qdrant Vector Database</h4>
-                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem" }}>Embedded Collection Metrics</p>
+                  <h4 style={{ fontSize: "1.15rem", fontWeight: "800", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>Qdrant Vector Database</h4>
+                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>EMBEDDED STORAGE TELEMETRY</p>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.875rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+
+              <div className="skeuo-well" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.85rem", fontSize: "0.875rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Collection Name</span>
-                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>{health?.vectorstore?.collection_name || "neuravault"}</span>
+                  <span style={{ fontWeight: "700", fontFamily: "var(--font-mono)", color: "#e2e8f0" }}>{health?.vectorstore?.collection_name || "neuravault"}</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Total Vectors Stored</span>
-                  <span style={{ fontWeight: "700", color: "#67e8f9" }}>{health?.vectorstore?.points_count ?? 0}</span>
+                  <span style={{ fontWeight: "800", color: "#67e8f9", fontFamily: "var(--font-mono)", fontSize: "1rem" }}>{health?.vectorstore?.points_count ?? 0}</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Vector Dimension</span>
-                  <span style={{ fontWeight: "600" }}>384 dims (Dense)</span>
+                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>384 dims (Dense)</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-muted)" }}>Distance Metric</span>
-                  <span style={{ fontWeight: "600" }}>Cosine Similarity</span>
+                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>Cosine Similarity</span>
                 </div>
               </div>
             </div>
 
-            {/* Embedding Model Card */}
-            <div className="glass-panel" style={{ padding: "1.5rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "rgba(6, 182, 212, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line></svg>
+            {/* Embedding Model Gauge Card */}
+            <div className="skeuo-panel" style={{ padding: "1.75rem", position: "relative" }}>
+              <div style={{ position: "absolute", top: "12px", right: "14px", display: "flex", gap: "5px" }}>
+                <span className="skeuo-rivet"></span>
+                <span className="skeuo-rivet"></span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
+                <div style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(180deg, #16404d 0%, #0d2229 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTop: "1px solid rgba(6, 182, 212, 0.35)",
+                  boxShadow: "0 3px 6px rgba(0,0,0,0.5)"
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="2.2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line></svg>
                 </div>
                 <div>
-                  <h4 style={{ fontSize: "1.125rem", fontWeight: "700" }}>Embedding Engine</h4>
-                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem" }}>SentenceTransformers Transformer</p>
+                  <h4 style={{ fontSize: "1.15rem", fontWeight: "800", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>Embedding Engine</h4>
+                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>DENSE TRANSFORMER PIPELINE</p>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.875rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+
+              <div className="skeuo-well" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.85rem", fontSize: "0.875rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Model</span>
-                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)", fontSize: "0.8125rem" }}>all-MiniLM-L6-v2</span>
+                  <span style={{ fontWeight: "700", fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "#67e8f9" }}>all-MiniLM-L6-v2</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Chunk Strategy</span>
-                  <span style={{ fontWeight: "600" }}>Recursive (1000 char / 200 ov)</span>
+                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>Recursive (1000 char / 200 ov)</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-muted)" }}>Execution Mode</span>
@@ -669,28 +843,43 @@ export default function App() {
             </div>
 
             {/* Architecture Card */}
-            <div className="glass-panel" style={{ padding: "1.5rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "rgba(16, 185, 129, 0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <div className="skeuo-panel" style={{ padding: "1.75rem", position: "relative" }}>
+              <div style={{ position: "absolute", top: "12px", right: "14px", display: "flex", gap: "5px" }}>
+                <span className="skeuo-rivet"></span>
+                <span className="skeuo-rivet"></span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.25rem" }}>
+                <div style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(180deg, #193e2f 0%, #0c241b 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTop: "1px solid rgba(16, 185, 129, 0.35)",
+                  boxShadow: "0 3px 6px rgba(0,0,0,0.5)"
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 </div>
                 <div>
-                  <h4 style={{ fontSize: "1.125rem", fontWeight: "700" }}>System Topology</h4>
-                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem" }}>NeuraVault Core Stack</p>
+                  <h4 style={{ fontSize: "1.15rem", fontWeight: "800", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>System Topology</h4>
+                  <p style={{ color: "var(--text-dim)", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>TACTILE RUNTIME ARCHITECTURE</p>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.875rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
+
+              <div className="skeuo-well" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.85rem", fontSize: "0.875rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
                   <span style={{ color: "var(--text-muted)" }}>Backend Framework</span>
-                  <span style={{ fontWeight: "600" }}>FastAPI 0.141</span>
+                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>FastAPI 0.141</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "0.5rem" }}>
-                  <span style={{ color: "var(--text-muted)" }}>Frontend Framework</span>
-                  <span style={{ fontWeight: "600" }}>React 18 + Vite 5</span>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "0.5rem" }}>
+                  <span style={{ color: "var(--text-muted)" }}>LLM Engine</span>
+                  <span style={{ fontWeight: "700", fontFamily: "var(--font-mono)", color: "#a5b4fc" }}>GroqCloud (Active LLM)</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "var(--text-muted)" }}>Vector Engine</span>
-                  <span style={{ fontWeight: "600" }}>Qdrant 1.19</span>
+                  <span style={{ fontWeight: "600", fontFamily: "var(--font-mono)" }}>Qdrant Dense 1.19</span>
                 </div>
               </div>
             </div>
@@ -714,25 +903,49 @@ export default function App() {
           zIndex: 100,
           padding: "1.5rem"
         }}>
-          <div className="glass-panel" style={{ width: "100%", maxWidth: "800px", maxHeight: "85vh", display: "flex", flexDirection: "column", padding: "1.5rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <div className="skeuo-panel" style={{ width: "100%", maxWidth: "840px", maxHeight: "88vh", display: "flex", flexDirection: "column", padding: "1.75rem", position: "relative" }}>
+            {/* Chassis Corner Rivets */}
+            <div style={{ position: "absolute", top: "12px", left: "14px", display: "flex", gap: "6px" }}>
+              <span className="skeuo-rivet"></span>
+              <span className="skeuo-rivet"></span>
+            </div>
+            <div style={{ position: "absolute", top: "12px", right: "14px", display: "flex", gap: "6px" }}>
+              <span className="skeuo-rivet"></span>
+              <span className="skeuo-rivet"></span>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", marginTop: "0.5rem" }}>
               <div>
-                <h3 style={{ fontSize: "1.25rem", fontWeight: "700" }}>Chunks: {selectedDocChunks.filename}</h3>
-                <p style={{ fontSize: "0.8125rem", color: "var(--text-dim)" }}>Total extracted chunks: {selectedDocChunks.total}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <h3 style={{ fontSize: "1.3rem", fontWeight: "800", textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>CARTRIDGE CHUNKS: {selectedDocChunks.filename}</h3>
+                </div>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-dim)", fontFamily: "var(--font-mono)", marginTop: "2px" }}>
+                  TOTAL EMBEDDED UNITS: <span style={{ color: "#38bdf8", fontWeight: "700" }}>{selectedDocChunks.total}</span> | 1000 CHAR CHUNK WINDOW
+                </p>
               </div>
-              <button className="btn btn-secondary" onClick={() => setSelectedDocChunks(null)}>
-                Close
+              <button className="btn btn-secondary" onClick={() => setSelectedDocChunks(null)} style={{ padding: "0.5rem 1.25rem" }}>
+                ✕ CLOSE CARTRIDGE
               </button>
             </div>
 
-            <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "0.75rem", paddingRight: "0.5rem" }}>
+            <div className="skeuo-well" style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "0.85rem", padding: "1.25rem" }}>
               {selectedDocChunks.chunks.map((chk, i) => (
-                <div key={i} style={{ background: "rgba(255, 255, 255, 0.03)", border: "1px solid var(--border-subtle)", borderRadius: "8px", padding: "1rem" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                    <span style={{ fontWeight: "600", fontSize: "0.75rem", color: "#818cf8" }}>Chunk #{i + 1} (ID: {chk.chunk_id})</span>
-                    <span className="badge badge-info" style={{ fontSize: "0.65rem" }}>Page {chk.page}</span>
+                <div key={i} style={{
+                  background: "linear-gradient(180deg, #182236 0%, #111827 100%)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  borderTop: "1px solid rgba(255, 255, 255, 0.16)",
+                  boxShadow: "0 3px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+                  borderRadius: "10px",
+                  padding: "1.1rem"
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span className="skeuo-rivet" style={{ width: "6px", height: "6px" }}></span>
+                      <span style={{ fontWeight: "700", fontSize: "0.8rem", color: "#818cf8", fontFamily: "var(--font-mono)" }}>CHUNK #{i + 1} // ID: {chk.chunk_id}</span>
+                    </div>
+                    <span className="badge badge-info" style={{ fontSize: "0.7rem", padding: "0.15rem 0.5rem" }}>Page {chk.page}</span>
                   </div>
-                  <p style={{ fontSize: "0.8125rem", color: "var(--text-main)", whiteSpace: "pre-wrap", lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: "0.84rem", color: "var(--text-main)", whiteSpace: "pre-wrap", lineHeight: 1.65, margin: 0, fontFamily: "var(--font-mono)", background: "rgba(0,0,0,0.25)", padding: "0.75rem", borderRadius: "6px", border: "1px solid rgba(0,0,0,0.4)" }}>
                     {chk.text}
                   </p>
                 </div>

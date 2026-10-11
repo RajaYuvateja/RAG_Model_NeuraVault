@@ -6,6 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR / "backend"))
 
 from app.services.embedding import generate_embeddings
+import app.services.vectorstore as vs
 from app.services.vectorstore import (
     create_collection,
     store_embeddings,

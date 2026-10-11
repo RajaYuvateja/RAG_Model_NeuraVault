@@ -38,3 +38,12 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Large user uploads and processed chunks
+data/uploads/*.pdf
+!data/uploads/Payment_Reciept.pdf
+!data/uploads/pra.pdf
+!data/uploads/SampleText_Content.pdf
+data/processed/*.pdf.json
+!data/processed/Payment_Reciept.pdf.json
+!data/processed/pra.pdf.json
